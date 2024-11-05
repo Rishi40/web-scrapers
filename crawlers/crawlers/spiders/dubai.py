@@ -3,7 +3,7 @@ from scrapy.selector import Selector
 import scrapy
 import json
 import re
-from worldduty.items import FactiveItem
+from worldduty.items import CrawlerItem
 from worldduty.common_functions import get_size_from_title, BENCHMARK_DATE, SCRAPE_DATE, visited_sku_ids, write_to_log
 import datetime
 from scrapy import signals
@@ -102,7 +102,7 @@ class DubaiSpider(scrapy.Spider):
         'DOWNLOAD_DELAY': 1,
         'CONCURRENT_REQUESTS': 5,
         'ITEM_PIPELINES': {
-            'worldduty.pipelines.FactivePipeline': 300,
+            'worldduty.pipelines.CrawlerPipeline': 300,
         },
     }
 
@@ -272,7 +272,7 @@ class DubaiSpider(scrapy.Spider):
         days_available = response.meta['days_available']
         exchange_rate = response.meta['exchange_rate']
 
-        dubaiItem = FactiveItem()
+        dubaiItem = CrawlerItem()
 
         dubaiItem['category'] = category
         dubaiItem['sub_category'] = sub_category

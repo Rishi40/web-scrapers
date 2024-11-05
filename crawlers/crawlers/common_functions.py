@@ -159,7 +159,7 @@ def select_web_page(cursor, website_id,sub_category):
 
     select_web_pages_object = f"""
         SELECT id,page_start,page_end
-        FROM factive_db.web_pages
+        FROM crawler_db.web_pages
         WHERE website_id = %s
         AND sub_category = %s
         AND is_picked = 0
@@ -179,7 +179,7 @@ def select_web_page(cursor, website_id,sub_category):
 def update_web_page(conn, cursor, web_page_id):
 
     update_web_pages_object = f"""
-        UPDATE factive_db.web_pages
+        UPDATE crawler_db.web_pages
         SET is_picked=1
         WHERE id = %s;
     """
@@ -216,7 +216,7 @@ def visited_sku_ids(website_id,date,sub_category):
 
     select_visited_skus_object = f"""
     SELECT sku_id
-    FROM factive_data 
+    FROM crawler_data 
     WHERE website_id = %s
     AND scrape_date >= %s
     AND sub_category = %s
@@ -240,7 +240,7 @@ def visited_skus(website_id,date,sub_category):
 
     select_visited_skus_object = f"""
     SELECT product_url
-    FROM factive_data 
+    FROM crawler_data 
     WHERE website_id = %s
     AND scrape_date >= %s
     AND sub_category = %s
@@ -265,7 +265,7 @@ def visited_model_ids(website_id,date,sub_category):
 
     select_miscellaneous_object = f"""
     SELECT miscellaneous
-    FROM factive_data 
+    FROM crawler_data 
     WHERE website_id = %s
     AND scrape_date >= %s
     AND sub_category = %s
@@ -295,7 +295,7 @@ def visited_miscelleneous_parameter(website_id,date,sub_category,misc_parameter)
 
     select_miscellaneous_object = """
         SELECT miscellaneous
-        FROM factive_data 
+        FROM crawler_data 
         WHERE website_id = %s
         AND scrape_date >= %s
         AND sub_category = %s;
@@ -327,7 +327,7 @@ def write_item_to_database(item):
     cursor = conn.cursor()
 
     insert_sql = f"""
-    insert ignore into factive_data(
+    insert ignore into crawler_data(
         website_id,scrape_date,category,sub_category,brand,
         sku_id,product_name,price,mrp,
         out_of_stock,discount,size,
@@ -366,14 +366,6 @@ def write_unresolved_products_to_file(unresolved_products_destination_filename,u
         unresolved_products_destination_filename.write(f"Unresolved list {sub_category} \n")
         unresolved_products_destination_filename.writelines(unresolved_products_list)
 
-def get_file_path(month,sub_category,website_name):
-
-    main_path = f'D:\\Factive Data\\Screenshots\\{month}\\'
-    sub_path = f'{website_name}\\{sub_category}\\'
-    unresolved_filename = f'Unresolved-{website_name}-{month}'
-
-    return main_path,sub_path,unresolved_filename
-
 def get_product_batch(website_id,category,sub_category,date,sku_id):
 
     connection = connect()
@@ -381,7 +373,7 @@ def get_product_batch(website_id,category,sub_category,date,sku_id):
 
     fetch_product_batch = """
         SELECT sku_id,product_url
-        FROM factive_db.factive_data
+        FROM crawler_db.crawler_data
         WHERE website_id = %s
         AND category = %s
         AND sub_category = %s
@@ -404,7 +396,7 @@ def get_product_batch_test(website_id,category,sub_category,date,sku_id):
 
     fetch_product_batch = """
         SELECT sku_id,product_url
-        FROM factive_db.factive_data
+        FROM crawler_db.crawler_data
         WHERE website_id = %s
         AND category = %s
         AND sub_category = %s
@@ -428,7 +420,7 @@ def get_website_name(website_id):
 
     fetch_website_name = """
         SELECT website_name
-        FROM factive_db.website_mapping
+        FROM crawler_db.website_mapping
         WHERE website_id = %s;
     """
     cursor.execute(fetch_website_name,(website_id,))
@@ -444,7 +436,7 @@ def reset_webPage_table():
     cursor = connection.cursor()
 
     reset_webPage = """
-        UPDATE factive_db.web_pages
+        UPDATE crawler_db.web_pages
         SET is_picked=0
         WHERE is_picked=1;
     """

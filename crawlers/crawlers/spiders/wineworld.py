@@ -3,7 +3,7 @@ from scrapy.selector import Selector
 import scrapy
 import json
 import re
-from worldduty.items import FactiveItem
+from worldduty.items import CrawlerItem
 from worldduty.common_functions import clean_name, get_size_from_title, SCRAPER_URL, visited_skus, BENCHMARK_DATE, write_to_log
 from datetime import datetime
 from scrapy import signals
@@ -39,7 +39,7 @@ class WdcSpider(scrapy.Spider):
         'DOWNLOAD_DELAY': 0.5,
         'CONCURRENT_REQUESTS': 5,
         'ITEM_PIPELINES': {
-            'worldduty.pipelines.FactivePipeline': 300,
+            'worldduty.pipelines.CrawlerPipeline': 300,
         },
     }
 
@@ -108,7 +108,7 @@ class WdcSpider(scrapy.Spider):
 
     def parse_product(self, response):
 
-        item = FactiveItem()
+        item = CrawlerItem()
         metadata = response.meta['metadata']
         product_link = metadata['product_url']
         size = None

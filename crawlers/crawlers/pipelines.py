@@ -11,7 +11,7 @@ try:
 except:
     from storage import connect
 
-class FactivePipeline:
+class CrawlerPipeline:
     def __init__(self):
         self.create_connection()
 
@@ -26,7 +26,7 @@ class FactivePipeline:
         
         self.cursor = self.conn.cursor()
         insert_sql = f"""
-        insert ignore into factive_data(
+        insert ignore into scraped_data(
             website_id,scrape_date,category,sub_category,brand,
             sku_id,product_name,price,mrp,
             out_of_stock,discount,size,
@@ -54,44 +54,6 @@ class FactivePipeline:
 
         except Exception as e:
             print("============ERROR===============")
-            print("Database Write Exception =>",e)
-
-        self.cursor.close()
-
-    def close_spider(self,spider):
-        self.conn.close()
-
-
-class FactiveUpdatePipeline:
-    def __init__(self):
-        self.create_connection()
-
-    def create_connection(self):
-        self.conn = connect()
-
-    def process_item(self,item,spider):
-        self.store_db(item)
-        return item
- 
-    def store_db(self,item):
-
-        self.cursor = self.conn.cursor()
-        update_sql = f"""
-        UPDATE factive_data 
-        SET price=%s
-        WHERE sku_id=%s
-        AND website_id = 6
-        AND scrape_date = curdate()
-        """
-
-        try:
-            self.cursor.execute(update_sql,(
-                item['price'], item['sku_id']
-            ))
-
-            self.conn.commit()   
-
-        except Exception as e:
             print("Database Write Exception =>",e)
 
         self.cursor.close()

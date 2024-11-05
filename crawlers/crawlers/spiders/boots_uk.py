@@ -3,7 +3,7 @@ from scrapy.selector import Selector
 import scrapy
 import json
 import re
-from worldduty.items import FactiveItem
+from worldduty.items import CrawlerItem
 from worldduty.common_functions import clean_name, get_size_from_title, clean_product_description, SCRAPER_URL, visited_skus, BENCHMARK_DATE, SCRAPE_DATE, visited_model_ids
 import datetime
 import requests
@@ -80,7 +80,7 @@ class WdcSpider(scrapy.Spider):
         'DOWNLOAD_DELAY': 1,
         'CONCURRENT_REQUESTS': 5,
         'ITEM_PIPELINES': {
-            'worldduty.pipelines.FactivePipeline': 300,
+            'worldduty.pipelines.CrawlerPipeline': 300,
         },
     }
 
